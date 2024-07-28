@@ -4,21 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using NLayer.Core.Services;
 using NLayer.Core;
 using NLayer.Core.DTOs;
+using NLayer.API.Filters;
 
 namespace NLayer.API.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
+	[ValidatorFilterAttribute]
 	public class ProductController : CustomBaseController
 	{
-		private readonly IService<Product> _service;
+		
+
 		private readonly IMapper _mapper;
+		private readonly IProductService _service;
 
 
-		public ProductController(IMapper mapper, IService<Product> service)
+		public ProductController(IMapper mapper, IService<Product> service, IProductService productService)
 		{
 			_mapper = mapper;
-			_service = service;
+			
+			_service = productService;
 		}
 
 		[HttpGet]
@@ -28,6 +31,14 @@ namespace NLayer.API.Controllers
 			var productsDtos = _mapper.Map<List<ProductDto>>(products.ToList());
 			return CreateActionResult(CustomResponseDto<List<ProductDto>>.Success(200, productsDtos));
 		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetProductsWiSthCategory()
+		{
+
+			return CreateActionResult(await _service.GetProductsWithCategory());
+		}
+
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetById(int id)
