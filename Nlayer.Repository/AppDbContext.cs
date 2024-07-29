@@ -25,7 +25,65 @@ namespace NLayer.Repository
         public DbSet<ProductFeature> ProductFeatures { get; set; }
 
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach( var item in ChangeTracker.Entries())
+            {
+                if(item.Entity is BaseEntity entityReference)
+                {
+                    switch (item.State)
+                    {
+                        case EntityState.Added:
+                        {
+                                entityReference.CreatedTime= DateTime.Now;
+                                break;                        
+                        }
+                        case EntityState.Modified:
+                        {
+                                Entry(entityReference).Property(x => x.CreatedTime).IsModified = false;
+
+                            entityReference.UpdatedTime= DateTime.Now; 
+                            break;
+                        }
+
+
+                    }
+
+                }
+            }
+
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override int SaveChanges()
+        {
+            foreach (var item in ChangeTracker.Entries())
+            {
+                if (item.Entity is BaseEntity entityReference)
+                {
+                    switch (item.State)
+                    {
+                        case EntityState.Added:
+                            {
+                                entityReference.CreatedTime = DateTime.Now;
+                                break;
+                            }
+                        case EntityState.Modified:
+                            {
+                                entityReference.UpdatedTime = DateTime.Now;
+                                break;
+                            }
+
+
+                    }
+
+                }
+            }
+
+            return base.SaveChanges();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
