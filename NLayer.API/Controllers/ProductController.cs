@@ -33,7 +33,7 @@ namespace NLayer.API.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public async Task<IActionResult> GetProductsWiSthCategory()
+		public async Task<IActionResult> GetProductsWithCategory()
 		{
 
 			return CreateActionResult(await _service.GetProductsWithCategory());

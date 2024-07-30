@@ -12,6 +12,7 @@ using NLayer.Service.Services;
 using NLayer.Service.Validations;
 using System.Reflection;
 using NLayer.Web;
+using NLayer.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,17 @@ builder.Services.AddDbContext<AppDbContext>(
         });
     }
     );
+
+builder.Services.AddHttpClient<ProductApiService>(opt =>
+{
+    opt.BaseAddress = new Uri(builder.Configuration["BaseUrl"]);
+});
+
+
+builder.Services.AddHttpClient<CategoryApiService>(opt =>
+{
+    opt.BaseAddress = new Uri(builder.Configuration["BaseUrl"]);
+});
 
 var app = builder.Build();
 app.UseExceptionHandler("/Home/Error");

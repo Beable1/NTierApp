@@ -21,10 +21,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(options=>options.Filters.Add(new ValidatorFilterAttribute()));
+builder.Services.AddControllers(options => options.Filters.Add(new ValidatorFilterAttribute()));
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-	options.SuppressModelStateInvalidFilter = true;
+    options.SuppressModelStateInvalidFilter = true;
 });
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<ProductDtoValidator>();
@@ -37,26 +37,26 @@ builder.Services.AddMemoryCache();
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
 builder.Services.AddScoped<IProductRepýository, ProductRepository>();
 
-builder.Services.AddScoped<IProductService, ProductServiceWithCaching>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddDbContext<AppDbContext>(
-	x =>
-	{
-		x.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), option =>
-		{
-			option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
-		});
-	}
-	);
+    x =>
+    {
+        x.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), option =>
+        {
+            option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
+        });
+    }
+    );
 
 var app = builder.Build();
 
@@ -64,8 +64,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
