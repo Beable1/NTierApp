@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NLayer.Core;
 using NLayer.Core.DTOs;
 using NLayer.Core.Models;
 using NLayer.Core.Services;
+using NLayer.Service.Services;
 
 namespace NLayer.API.Controllers
 {
@@ -33,5 +35,47 @@ namespace NLayer.API.Controllers
 			return CreateActionResult(await _categoryService.GetSingleCategoryByIdWithProductsAsync(categoryId));
 		}
 
-	}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var category = await _categoryService.GetByIdAsync(id);
+
+            var categoryDto = _mapper.Map<CategoryDto>(category);
+
+            return CreateActionResult(CustomResponseDto<CategoryDto>.Success(200, categoryDto));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CategoryDto _categoryDto)
+        {
+            
+
+            var category=await _categoryService.AddAsync(_mapper.Map<Category>(_categoryDto));
+            var categoryDto = _mapper.Map<CategoryDto>(category);
+
+
+
+            return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, categoryDto));
+        }
+
+
+        [HttpPut]
+        public async Task<IActionResult> Update(CategoryDto categoryDto)
+        {
+            await _categoryService.UpdateAsync(_mapper.Map<Category>(categoryDto));
+
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            var product = await _categoryService.GetByIdAsync(id);
+            await _categoryService.RemoveAsync(product);
+
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
+        }
+
+    }
 }

@@ -27,37 +27,22 @@ namespace NLayer.Repository
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            foreach( var item in ChangeTracker.Entries())
-            {
-                if(item.Entity is BaseEntity entityReference)
-                {
-                    switch (item.State)
-                    {
-                        case EntityState.Added:
-                        {
-                                entityReference.CreatedTime= DateTime.Now;
-                                break;                        
-                        }
-                        case EntityState.Modified:
-                        {
-                                Entry(entityReference).Property(x => x.CreatedTime).IsModified = false;
-
-                            entityReference.UpdatedTime= DateTime.Now; 
-                            break;
-                        }
-
-
-                    }
-
-                }
-            }
-
+            
+            LoadChangeTracker();
 
             return base.SaveChangesAsync(cancellationToken);
         }
 
         public override int SaveChanges()
         {
+            LoadChangeTracker();
+
+            return base.SaveChanges();
+        }
+
+        public void LoadChangeTracker()
+        {
+
             foreach (var item in ChangeTracker.Entries())
             {
                 if (item.Entity is BaseEntity entityReference)
@@ -66,11 +51,14 @@ namespace NLayer.Repository
                     {
                         case EntityState.Added:
                             {
+                                Entry(entityReference).Property(x => x.UpdatedTime).IsModified = false;
                                 entityReference.CreatedTime = DateTime.Now;
                                 break;
                             }
                         case EntityState.Modified:
                             {
+                                Entry(entityReference).Property(x => x.CreatedTime).IsModified = false;
+
                                 entityReference.UpdatedTime = DateTime.Now;
                                 break;
                             }
@@ -80,8 +68,6 @@ namespace NLayer.Repository
 
                 }
             }
-
-            return base.SaveChanges();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

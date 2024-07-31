@@ -46,6 +46,11 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
+builder.Services.AddScoped<IProductServiceWithDto, ProductServiceWithDto>();
+builder.Services.AddScoped<ICategoryServiceWithDto, CategoryServiceWithDto>();
+
+builder.Services.AddScoped(typeof(IServiceWithDto<,>), typeof(ServiceWithDto<,>));
+
 
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddDbContext<AppDbContext>(

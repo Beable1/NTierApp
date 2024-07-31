@@ -13,6 +13,8 @@ using NLayer.Service.Validations;
 using System.Reflection;
 using NLayer.Web;
 using NLayer.Web.Services;
+using NLayer.Core;
+using NLayer.Core.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,9 +30,14 @@ builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
 builder.Services.AddScoped<IProductRepýository, ProductRepository>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductServiceWithDto, ProductServiceWithDto>();
+builder.Services.AddScoped(typeof(IServiceWithDto<,>),typeof( ServiceWithDto<,>));
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
+
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddScoped(typeof(NotFoundFilter<>));
 
