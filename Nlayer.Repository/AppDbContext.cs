@@ -21,8 +21,14 @@ namespace NLayer.Repository
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Product> Product { get; set; }
-        
+
         public DbSet<ProductFeature> ProductFeatures { get; set; }
+
+        public DbSet<Order> Order { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
